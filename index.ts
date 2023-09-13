@@ -15,9 +15,14 @@ async function main() {
   */
   // Get all users
   /*
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    include: {
+      articles: true,
+    },
+  });
   console.log(users);
   */
+
   // Create article and add to user
   /*
   const article = await prisma.article.create({
@@ -34,12 +39,15 @@ async function main() {
   console.log(article);
   */
   // Get all articles
-  
-    const articles = await prisma.article.findMany();
+  /*
+    const articles = await prisma.article.findMany()
+
     console.log(articles);
-    
-    // Create user and article and associate
     /*
+    
+
+  // Create user and article and associate
+  /*
   const user = await prisma.user.create({
     data: {
       name: 'Sara Smith',
@@ -54,6 +62,36 @@ async function main() {
   });
   console.log(user);
   */
+  // Create another article and add to user
+  /*
+  const article = await prisma.article.create({
+    data: {
+      title: 'Sarah Second Article',
+      body: 'This is Sarahs second article',
+      author: {
+        connect: {
+          id: 2,
+        },
+      },
+    },
+  });
+  console.log(article);
+  */
+
+  //  All articles for a specific user
+  const users = await prisma.user.findMany({
+    include: {
+      articles: true,
+    },
+  });
+  users.forEach((user) => {
+    console.log(`User: ${user.name}, Email: ${user.email} `);
+    console.log('Articles: ');
+    user.articles.forEach((article) => {
+      console.log(`- Title: ${article.title}, Body: ${article.body}`);
+    });
+    console.log('\n');
+  });
 }
 
 main()
